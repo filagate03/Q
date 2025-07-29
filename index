@@ -1,0 +1,125 @@
+<!<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Калькулятор ROI</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+/* Дополнительные стили при необходимости */
+body {
+font-family: 'Inter', sans-serif; /* Используем шрифт Inter */
+background-color: #f3f4f6; /* Светлый фон */
+display: flex;
+justify-content: center;
+align-items: center;
+min-height: 100vh; /* Занимаем всю высоту экрана */
+padding: 1rem; /* Отступы по краям */
+}
+.calculator-container {
+background-color: #ffffff; /* Белый фон контейнера */
+padding: 2rem; /* Внутренние отступы */
+border-radius: 0.75rem; /* Скругленные углы */
+box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Тень */
+max-width: 500px; /* Максимальная ширина */
+width: 100%; /* Занимаем всю доступную ширину */
+}
+.input-group {
+margin-bottom: 1.5rem; /* Отступ между группами полей */
+}
+label {
+display: block; /* Каждая метка на новой строке */
+margin-bottom: 0.5rem; /* Отступ под меткой */
+font-weight: bold; /* Жирный текст метки */
+color: #374151; /* Темно-серый цвет текста */
+}
+input[type="number"] {
+width: 100%; /* Поле ввода занимает всю ширину */
+padding: 0.75rem; /* Внутренние отступы в поле */
+border: 1px solid #d1d5db; /* Серая рамка */
+border-radius: 0.5rem; /* Скругленные углы поля */
+box-sizing: border-box; /* Учитываем padding и border в ширине */
+font-size: 1rem; /* Размер шрифта */
+}
+button {
+width: 100%; /* Кнопка занимает всю ширину */
+padding: 1rem; /* Внутренние отступы кнопки */
+background-color: #2563eb; /* Синий фон кнопки */
+color: white; /* Белый текст кнопки */
+font-weight: bold; /* Жирный текст */
+border: none; /* Без рамки */
+border-radius: 0.5rem; /* Скругленные углы кнопки */
+cursor: pointer; /* Курсор-указатель */
+transition: background-color 0.3s ease; /* Плавное изменение цвета при наведении */
+}
+button:hover {
+background-color: #1d4ed8; /* Темнее синий при наведении */
+}
+.result {
+margin-top: 2rem; /* Отступ сверху */
+padding-top: 1.5rem; /* Внутренний отступ сверху */
+border-top: 1px solid #e5e7eb; /* Разделитель сверху */
+color: #1f2937; /* Темный цвет текста */
+}
+.result p {
+margin-bottom: 0.75rem; /* Отступ под параграфом */
+font-size: 1.125rem; /* Увеличенный размер шрифта */
+}
+.result p strong {
+color: #059669; /* Зеленый цвет для ключевых цифр */
+}
+</style>
+</head>
+<body>
+<div class="calculator-container">
+<h2 class="text-2xl font-bold text-center mb-6 text-gray-800">Калькулятор ROI</h2>
+<div class="input-group">
+<label for="investment">Первоначальные инвестиции (₽):</label>
+<input type="number" id="investment" value="300000" placeholder="Например, 300000">
+</div>
+<div class="input-group">
+<label for="costSavings">Ежегодная экономия затрат (₽):</label>
+<input type="number" id="costSavings" value="1500000" placeholder="Например, 1500000">
+</div>
+<div class="input-group">
+<label for="revenueIncrease">Ежегодное увеличение выручки (₽):</label>
+<input type="number" id="revenueIncrease" value="2000000" placeholder="Например, 2000000">
+</div>
+<button onclick="calculateROI()">Рассчитать ROI</button>
+<div class="result" id="resultArea">
+</div>
+</div>
+<script>
+// Функция для расчета ROI
+function calculateROI() {
+// Получаем значения из полей ввода
+const investment = parseFloat(document.getElementById('investment').value);
+const costSavings = parseFloat(document.getElementById('costSavings').value);
+const revenueIncrease = parseFloat(document.getElementById('revenueIncrease').value);
+// Проверяем, что введены корректные числа
+if (isNaN(investment) || isNaN(costSavings) || isNaN(revenueIncrease) || investment <= 0) {
+document.getElementById('resultArea').innerHTML = '<p class="text-red-500">Пожалуйста, введите корректные числовые значения. Инвестиции должны быть больше нуля.</p>';
+return; // Прерываем выполнение функции
+}
+// Рассчитываем общую ежегодную выгоду
+const totalBenefit = costSavings + revenueIncrease;
+// Рассчитываем ROI
+// Формула ROI: ((Общая выгода - Инвестиции) / Инвестиции) * 100
+const roi = ((totalBenefit - investment) / investment) * 100;
+// Форматируем результаты для отображения
+const formattedTotalBenefit = totalBenefit.toLocaleString('ru-RU', { style: 'currency', currency: 'RUB', maximumFractionDigits: 0 });
+const formattedInvestment = investment.toLocaleString('ru-RU', { style: 'currency', currency: 'RUB', maximumFractionDigits: 0 });
+const formattedROI = roi.toFixed(2) + '%'; // Округляем до 2 знаков после запятой
+// Отображаем результаты
+document.getElementById('resultArea').innerHTML = `
+<p>Общая ежегодная выгода: <strong>${formattedTotalBenefit}</strong></p>
+<p>Ваши инвестиции: <strong>${formattedInvestment}</strong></p>
+<p>Потенциальный ROI: <strong>${formattedROI}</strong></p>
+<p class="text-sm text-gray-600 mt-2">ROI рассчитан как ((Ежегодная выгода - Инвестиции) / Инвестиции) * 100%</p>
+`;
+}
+// Выполняем расчет при загрузке страницы с дефолтными значениями
+window.onload = calculateROI;
+</script>
+</body>
+</html>
